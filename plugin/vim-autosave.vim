@@ -48,22 +48,22 @@ function! IsWorkingBuffer()
 endfunction
 
 ""
-" AutoUpdate:
+" AutoSave:
 "   Persistently auto updates all work buffers.
 "   A work buffer is any buffer with a
 "   corresponding file on disk.
-function! AutoUpdate()
+function! AutoSave()
     if IsWorkingBuffer()
         execute 'write'
     endif
 endfunction
 
-augroup auto_save
+augroup vim_autosave
     autocmd!
     autocmd InsertLeave,
-                \CursorHold,CursorMoved,
-                \FocusGained,FocusLost,
-                \BufWinLeave,BufLeave,
-                \VimLeavePre
-                \ * silent execute 'call AutoUpdate()'
+                \ CursorHold,CursorMoved,
+                \ FocusGained,FocusLost,
+                \ BufWinLeave,BufLeave,
+                \ VimLeavePre
+                \ * silent execute 'call AutoSave()'
 augroup END
