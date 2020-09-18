@@ -2,13 +2,13 @@ if exists('g:loaded_autosave') | finish | endif
 let g:loaded_autosave = 1
 
 ""
-" IsModifiable:
-"     Checks if current buffer is modifiable.
-function! IsModifiable()
-    if &modifiable!=#'1' || &buftype!=#'' || &filetype ==#''
-        return v:false
-    elseif &modifiable==#'1' && &buftype==#'' && &filetype !=#''
+" Writable:
+"     Checks if current buffer is writable.
+function! Writable()
+    if &modifiable==#'1' && &buftype==#'' && &filetype !=#''
         return v:true
+    elseif &modifiable!=#'1' || &buftype!=#'' || &filetype ==#''
+        return v:false
     endif
 endfunction
 
@@ -16,7 +16,7 @@ endfunction
 " IsNERDTree:
 "     Checks if current buffer is a NERDTREE buffer.
 function! IsNERDTree()
-    if &modifiable==#'0' &&  &filetype ==#'nerdtree'
+    if  &filetype ==#'nerdtree'
         return v:true
     else
         return v:false
@@ -25,7 +25,7 @@ endfunction
 
 ""
 " IsNoName:
-"   Checks if current buffer is a No name buffer.
+"   Checks if current buffer is a No Name buffer.
 function! IsNoName()
     if &buftype==#'' && bufname('%')==#'' && &modifiable==#'1'
         return v:true
@@ -35,10 +35,10 @@ function! IsNoName()
 endfunction
 
 ""
-" IsWorkingBuffer:
+" Savable:
 "   Checks if current buffer is a working buffer.
-function! IsWorkingBuffer()
-    if IsModifiable() && !IsNERDTree()
+function! Savable()
+    if Writable() && !IsNERDTree()
         if !IsNoName()
             return v:true
         endif
@@ -49,21 +49,21 @@ endfunction
 
 ""
 " AutoSave:
-"   Persistently auto updates all work buffers.
-"   A work buffer is any buffer with a
-"   corresponding file on disk.
+"   Persist :write
 function! AutoSave()
-    if IsWorkingBuffer()
+    if Savable()
         execute 'write'
     endif
 endfunction
 
-augroup vim_autosave
+" VIM_AUTOSAVE CASES:
+"   case 1: leaving insert mode [ InsertLeave ]
+"   case 2: before leaving a buffer [ BufLeave ]
+"   case 3: before deleting a buffer [ BufDelete ]
+"   case 4: before exiting vim [ VimLeavePre ]
+"   case 5: after text is change [ TextChanged, TextChangedI, TextChangedP ]
+augroup vim_autosave_au
     autocmd!
-    autocmd InsertLeave,
-                \ CursorHold,CursorMoved,
-                \ FocusGained,FocusLost,
-                \ BufWinLeave,BufLeave,
-                \ VimLeavePre
-                \ * silent execute 'call AutoSave()'
+    autocmd InsertLeave,BufLeave,VimLeavePre * :call AutoSave()
+    autocmd TextChanged,TextChangedI,TextChangedP * :call AutoSave()
 augroup END
