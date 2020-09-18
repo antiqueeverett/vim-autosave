@@ -52,7 +52,7 @@ endfunction
 "   Persist :write
 function! AutoSave()
     if Savable()
-        execute 'write'
+        silent execute 'write'
     endif
 endfunction
 
