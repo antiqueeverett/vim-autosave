@@ -57,13 +57,10 @@ function! AutoSave()
 endfunction
 
 " VIM_AUTOSAVE CASES:
-"   case 1: leaving insert mode [ InsertLeave ]
+"   case 1: after text is changed [ TextChanged, TextChangedI, TextChangedP ]
 "   case 2: before leaving a buffer [ BufLeave ]
-"   case 3: before deleting a buffer [ BufDelete ]
-"   case 4: before exiting vim [ VimLeavePre ]
-"   case 5: after text is change [ TextChanged, TextChangedI, TextChangedP ]
+"   case 3: before exiting vim [ VimLeavePre ]
 augroup vim_autosave_au
     autocmd!
-    autocmd InsertLeave,BufLeave,VimLeavePre * :call AutoSave()
-    autocmd TextChanged,TextChangedI,TextChangedP * :call AutoSave()
+    autocmd TextChanged,TextChangedI,TextChangedP,BufLeave,VimLeavePre * :call AutoSave()
 augroup END
