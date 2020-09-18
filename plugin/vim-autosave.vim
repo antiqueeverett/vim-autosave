@@ -62,5 +62,5 @@ endfunction
 "   case 3: before exiting vim [ VimLeavePre ]
 augroup vim_autosave_au
     autocmd!
-    autocmd TextChanged,TextChangedI,TextChangedP,BufLeave,VimLeavePre * :call AutoSave()
+    autocmd TextChanged,TextChangedI,TextChangedP,BufLeave,VimLeavePre * :silent call AutoSave()
 augroup END
