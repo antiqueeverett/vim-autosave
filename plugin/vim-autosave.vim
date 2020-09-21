@@ -52,7 +52,7 @@ endfunction
 "   Persist :write
 function! AutoSave()
     if Savable()
-        silent execute 'write'
+        execute 'write'
     endif
 endfunction
 
@@ -63,5 +63,5 @@ endfunction
 "   case 4: before exiting vim [ VimLeavePre ]
 augroup vim_autosave_au
     autocmd!
-    autocmd TextChanged,InsertLeave,BufLeave,VimLeavePre * :silent call AutoSave()
+    autocmd TextChanged,InsertLeave,BufLeave,VimLeavePre * :call AutoSave()
 augroup END
